@@ -7,7 +7,6 @@ from datetime import datetime
 class BaseModel:
     """Initialization of class BaseModel"""
 
-
     def __init__(self):
         """Constructor of the class"""
 
@@ -15,12 +14,12 @@ class BaseModel:
         self.created_at = datetime.now()
         self.update_at = datetime.now()
 
+    def __str__(self):
+        return (f"[{type(self).__name__}] ({self.id}) {self.__dict__}")
+
     def save(self):
         """Updates the attribute with the current datetime"""
         self.update_at = datetime.now()
-
-    def __str__(self):
-        return (f"[{type(self).__name__}] ({self.id}) {self.__dict__}")
 
     def to_dict(self):
         newDict = self.__dict__.copy()
