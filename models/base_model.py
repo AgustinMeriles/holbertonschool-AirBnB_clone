@@ -17,9 +17,11 @@ class BaseModel:
     def __str__(self):
         return (f"[{type(self).__name__}] ({self.id}) {self.__dict__}")
 
-    def save(self):
+    def save(self, name, value):
         """Updates the attribute with the current datetime"""
-        self.update_at = datetime.datetime.now()
+        if name != self.update_at:
+            self.update_at = datetime.datetime.now()
+        super().__setattr__(name, value)
 
     def to_dict(self):
         newDict = self.__dict__.copy()
