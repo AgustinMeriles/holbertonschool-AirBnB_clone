@@ -25,5 +25,5 @@ class BaseModel:
         newDict = self.__dict__.copy()
         newDict["__class__"] = type(self).__name__
         newDict["created_at"] = self.created_at.isoformat()
-        newDict["updated_at"] = self.update_at.isoformat()
+        newDict["updated_at"] = self.updated_at.isoformat()
         return newDict
