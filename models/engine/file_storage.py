@@ -2,7 +2,7 @@
 """Shebang"""
 import json
 from models.base_model import BaseModel
-import os.path
+
 
 class FileStorage:
     """Initialization of the class FileStorage"""
@@ -16,12 +16,13 @@ class FileStorage:
     
     def new(self, obj):
         """Sets a new object in __objects, with the class name as the key"""
-        newKey = (f"{obj.__class__.__name__}.{str(obj.id)}")
-        self.__class__.__objects[newKey] = obj
+        if obj is not None:
+            newKey = (f"{obj.__class__.__name__}.{str(obj.id)}")
+            self.__class__.__objects[newKey] = obj
     
     def save(self):
         """Serializes __objects to the JSON file"""
-        with open(self.__class__.__file_path, 'w', encoding='utf-8') as f:
+        with open(self.__file_path, 'w') as f:
             objects_json = {}
             for key, value in self.__objects.items():
                 objects_json[key] = value.to_dict()
@@ -29,6 +30,12 @@ class FileStorage:
     
     def reload(self):
         """Desearilzes the JSON file to __objects"""
-        if os.path.isfile(self.__class__.__file_path):
-            with open(self.__class__.__file_path, 'r', encoding='utf-8') as f:
-                self.__class__.__objects = json.load(f)
+        try:
+            with open(FileStorage.__file_path, 'r', encoding='utf-8') as f:
+                objects_json = json.load(f)
+                for key, value in objects_json.items():
+                    obj_class = value['__class__']
+                    obj = eval(obj_class + "(**value)")
+                    FileStorage.__objects[key] = obj
+        except FileNotFoundError:
+            pass
