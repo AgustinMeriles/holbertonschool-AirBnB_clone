@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Shebang"""
 import json
+from models.base_model import BaseModel
 import os.path
 
 class FileStorage:
