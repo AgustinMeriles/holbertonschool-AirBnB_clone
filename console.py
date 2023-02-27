@@ -47,10 +47,13 @@ class HBNBCommand(cmd.Cmd):
                 all_objs = storage.all()
                 obj_class = eval(f"str({args[0]})")
                 obj_id = args[1]
+                obj = None
                 for obj_class in all_objs.items():
                     for obj_id in all_objs.keys():
                         obj = all_objs[obj_id]
                         print(obj)
+                if obj == None:
+                    print("** no instance found **")
             except IndexError:
                 print("** instance id missing **")
             except NameError:
