@@ -31,5 +31,3 @@ class FileStorage:
         if os.path.isfile(self.__class__.__file_path):
             with open(self.__class__.__file_path, 'r', encoding='utf-8') as f:
                 self.__class__.__objects = json.load(f)
-        else:
-            raise FileNotFoundError
