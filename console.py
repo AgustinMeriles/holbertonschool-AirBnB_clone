@@ -51,7 +51,10 @@ class HBNBCommand(cmd.Cmd):
                 for obj_class in all_objs.items():
                     for obj_id in all_objs.keys():
                         obj = all_objs[obj_id]
-                        print(obj)
+                        if obj.id == args[1]:
+                            print(obj)
+                        else:
+                            obj = None
                 if obj == None:
                     print("** no instance found **")
             except IndexError:
