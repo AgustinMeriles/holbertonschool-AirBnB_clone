@@ -22,6 +22,18 @@ class HBNBCommand(cmd.Cmd):
         """Quit command to exit the program"""
         return True
 
+    def do_create(self, *args):
+        """Creates a new instance of Basemodel"""
+        if args[0] == "":
+            print("** class name missing **")
+        else:
+            try:
+                new_model = None
+                new_model = eval(f"{args[0]}()")
+                print (new_model.id)
+            except NameError:
+                print("** class doesn't exist **")
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
