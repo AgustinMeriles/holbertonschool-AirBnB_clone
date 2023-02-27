@@ -12,7 +12,7 @@ class FileStorage:
 
     def all(self):
         """Function that returns the dictionary (objects) from FileStorage class"""
-        return FileStorage.__objects
+        return self.__objects
     
     def new(self, obj):
         """Sets a new object in __objects, with the class name as the key"""
