@@ -3,7 +3,7 @@
 import cmd
 from models import storage
 from models.base_model import BaseModel
-
+from models.user import User
 
 class HBNBCommand(cmd.Cmd):
     """ Command shell for hbnb """
@@ -54,14 +54,18 @@ class HBNBCommand(cmd.Cmd):
                         obj = all_objs[obj_id]
                         if obj.id == args[1]:
                             print(obj)
+                            return 0
                         else:
                             obj = None
                 if obj == None:
                     print("** no instance found **")
+                    return 0
             except IndexError:
                 print("** instance id missing **")
+                return 0
             except NameError:
                 print("** class doesn't exist **")
+                return 0
 
 
     def do_destroy(self, *args):
