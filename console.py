@@ -1,16 +1,22 @@
 #!/usr/bin/python3
 """ Defines the console class """
 import cmd
-import models
-from models import storage
 from models.base_model import BaseModel
+from models import storage
 from models.user import User
+from models.place import Place
+from models.state import State
+from models.review import Review
+from models.city import City
+from models.amenity import Amenity
+import models
+
 
 class HBNBCommand(cmd.Cmd):
     """ Command shell for hbnb """
 
     prompt = "(hbnb) "
-
+        
     def emptyline(self):
         """Ignores empty prompts"""
         pass
@@ -55,6 +61,7 @@ class HBNBCommand(cmd.Cmd):
                         obj = all_objs[obj_id]
                         if obj.id == args[1]:
                             print(obj)
+                            return 0
                         else:
                             obj = None
                 if obj == None:
