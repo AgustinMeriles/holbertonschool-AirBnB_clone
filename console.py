@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """ Defines the console class """
 import cmd
+import models
 from models import storage
 from models.base_model import BaseModel
 from models.user import User
@@ -66,7 +67,6 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
                 return 0
 
-
     def do_destroy(self, *args):
         """ destroys an instance based on the class name and id"""
         if args[0] == "":
@@ -79,19 +79,18 @@ class HBNBCommand(cmd.Cmd):
                 obj_class = eval(f"str({args[0]})")
                 obj_id = args[1]
                 obj = None
-                for obj_class in all_objs.items():
-                    for obj_id in all_objs.keys():
-                        obj = all_objs[obj_id]
-                if obj.id != args[1]:
-                    print("** no instance found **")
-                    return 0
-                else:
-                    all_objs.pop(obj_id)
-                    storage.save()
             except IndexError:
                 print("** instance id missing **")
+                return 0
             except NameError:
                 print("** class doesn't exist **")
+                return 0
+            try:
+                del all_objs[f'{args[0]}.{obj_id}']
+                storage.save()
+            except KeyError:
+                print("** instance not found **")
+                return 0
 
 
     def do_all(self, *args):
@@ -114,7 +113,7 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
 
 
-
+    #Fix this to work with user
     def do_update(self, *args):
         """Updates an instance based on the class name and id by adding or
         updating the attribute"""
