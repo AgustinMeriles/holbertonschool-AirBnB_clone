@@ -79,10 +79,12 @@ class HBNBCommand(cmd.Cmd):
                 for obj_class in all_objs.items():
                     for obj_id in all_objs.keys():
                         obj = all_objs[obj_id]
-                if obj == None:
+                if obj.id != args[1]:
                     print("** no instance found **")
+                    return 0
                 else:
                     all_objs.pop(obj_id)
+                    storage.save()
             except IndexError:
                 print("** instance id missing **")
             except NameError:
@@ -127,18 +129,18 @@ class HBNBCommand(cmd.Cmd):
                 print(parametro[len(args) - 1])
                 return 0
             all_objs = storage.all()
-            obj_class = eval(f"str({args[0]})")
-            obj_id = args[1]
-            obj_attrib = args[2]
-            new_value = args[3]
             try:
-                obj = None
-                key = obj_class + "." + obj_id
-                for key in all_objs.keys():
-                    obj = all_objs[key]
+                obj_class = eval(f"str({args[0]})")
             except NameError:
                 print("** class doesn't exist **")
                 return 0
+            obj_id = args[1]
+            obj_attrib = args[2]
+            new_value = args[3]
+            obj = None
+            key = obj_class + "." + obj_id
+            for key in all_objs.keys():
+                obj = all_objs[key]
             try:
                 if obj.id  != obj_id:
                     print("** no instance found **")
