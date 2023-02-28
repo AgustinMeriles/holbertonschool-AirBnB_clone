@@ -17,14 +17,16 @@ class FileStorage:
     __objects = {}
 
     def all(self):
-        """Function that returns the dictionary (objects) from FileStorage class"""
+        """Function that returns the dictionary (objects)
+        from FileStorage class"""
         return self.__objects
     
     def new(self, obj):
-        """Sets a new object in __objects, with the class name as the key"""
+        """Sets a new object in __objects,
+        with the class name as the key"""
         if obj is not None:
-            newKey = (f"{obj.__class__.__name__}.{str(obj.id)}")
-            self.__class__.__objects[newKey] = obj
+            newKey = obj.__class__.__name__ + "." + obj.id
+            FileStorage.__objects[newKey] = obj
     
     def save(self):
         """Serializes __objects to the JSON file"""
