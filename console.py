@@ -130,6 +130,7 @@ class HBNBCommand(cmd.Cmd):
                               "** value missing **"]
                 print(parametro[len(args) - 1])
                 return 0
+
             all_objs = storage.all()
             try:
                 obj_class = eval(f"str({args[0]})")
@@ -140,17 +141,24 @@ class HBNBCommand(cmd.Cmd):
             obj_attrib = args[2]
             new_value = args[3]
             obj = None
-            key = obj_class + "." + obj_id
-            for key in all_objs.keys():
-                obj = all_objs[key]
+            key = args[0] + "." + obj_id
             try:
-                if obj.id  != obj_id:
+                obj = all_objs.get(f'{key}')
+            except Exception:
+                print("** no instance found **")
+                return 0
+
+            try:
+                obj.__dict__[args[2]] = eval(args[3])
+            except AttributeError:
+                print("** no instance found **")
+                return 0
+            except Exception:
+                try:
+                    obj.__dict__[args[2]] = args[3]
+                except Exception:
                     print("** no instance found **")
                     return 0
-                else:
-                    obj.__dict__[args[2]] = eval(args[3])
-            except Exception:
-                obj.__dict__[args[2]] = args[3]
             obj.save()
 
 if __name__ == '__main__':
