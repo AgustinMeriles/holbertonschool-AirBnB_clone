@@ -107,7 +107,7 @@ class HBNBCommand(cmd.Cmd):
                 del all_objs[f'{args[0]}.{obj_id}']
                 storage.save()
             except KeyError:
-                print("** instance not found **")
+                print("** no instance found **")
                 return 0
 
 
