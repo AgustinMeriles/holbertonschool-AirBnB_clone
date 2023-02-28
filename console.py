@@ -118,33 +118,29 @@ class HBNBCommand(cmd.Cmd):
         else:
             args = "".join(args)
             args = tuple(map(str, args.split(" ")))
+
+            #missing parameters handler
+            if len(args) < 4:
+                parametro = ["** instance id missing **", \
+                              "** attribute name missing **", \
+                              "** value missing **"]
+                print(parametro[len(args) - 1])
+                return 0
             all_objs = storage.all()
             obj_class = eval(f"str({args[0]})")
-            try:
-                obj_id = args[1]
-            except IndexError:
-                print("** instance id missing **")
-                return 0
-            try:
-                obj_attrib = args[2]
-            except IndexError:
-                print("** attribute name missing **")
-                return 0
-            try:
-                new_value = args[3]
-            except IndexError:
-                print("** value missing **")
-                return 0
+            obj_id = args[1]
+            obj_attrib = args[2]
+            new_value = args[3]
             try:
                 obj = None
                 key = obj_class + "." + obj_id
                 for key in all_objs.keys():
-                        obj = all_objs[key]
+                    obj = all_objs[key]
             except NameError:
                 print("** class doesn't exist **")
                 return 0
             try:
-                if obj == None:
+                if obj.id  != obj_id:
                     print("** no instance found **")
                     return 0
                 else:
