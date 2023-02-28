@@ -49,6 +49,7 @@ class HBNBCommand(cmd.Cmd):
         if args[0] == "":
             print("** class name missing **")
         else:
+            #This splits the arguments for further use
             args = "".join(args)
             args = tuple(map(str, args.split(" ")))
             try:
@@ -56,6 +57,8 @@ class HBNBCommand(cmd.Cmd):
                 obj_class = eval(f"str({args[0]})")
                 obj_id = args[1]
                 obj = None
+                #It's a bit ugly but this is the function that searches
+                #for our value and prints it if it finds it.
                 for obj_class in all_objs.items():
                     for obj_id in all_objs.keys():
                         obj = all_objs[obj_id]
@@ -64,6 +67,8 @@ class HBNBCommand(cmd.Cmd):
                             return 0
                         else:
                             obj = None
+                            #Everything under this line is just
+                            #error handling
                 if obj == None:
                     print("** no instance found **")
                     return 0
@@ -76,12 +81,15 @@ class HBNBCommand(cmd.Cmd):
 
     def do_destroy(self, *args):
         """ destroys an instance based on the class name and id"""
+        #IF no arguments are giving, assume empty tuple
         if args[0] == "":
             print("** class name missing **")
         else:
             args = "".join(args)
             args = tuple(map(str, args.split(" ")))
             try:
+                #This will try to find out value
+                #and set it to obj so we can delete
                 all_objs = storage.all()
                 obj_class = eval(f"str({args[0]})")
                 obj_id = args[1]
@@ -93,6 +101,8 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
                 return 0
             try:
+                #This is the part that actually deletes
+                #our value after it's setted
                 del all_objs[f'{args[0]}.{obj_id}']
                 storage.save()
             except KeyError:
@@ -105,10 +115,15 @@ class HBNBCommand(cmd.Cmd):
         the class name.
         Ex: $ all BaseModel or $ all. """
         all_objs = storage.all()
+        #IF no arguments are given, just print everything
         if args[0] == "":
             for i in all_objs.keys():
                 print(all_objs[i])
         else:
+            #If arguments are given, print everything that
+            #contains the class name (args[0])
+            #TO do this we look up the key names in our
+            #dictionary of objects
             args = "".join(args)
             args = tuple(map(str, args.split(" ")))
             try:
@@ -120,7 +135,6 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
 
 
-    #Fix this to work with user
     def do_update(self, *args):
         """Updates an instance based on the class name and id by adding or
         updating the attribute"""
@@ -149,12 +163,16 @@ class HBNBCommand(cmd.Cmd):
             new_value = args[3]
             obj = None
             key = args[0] + "." + obj_id
+            #This part of the code will attempt to
+            #get our object.
             try:
                 obj = all_objs.get(f'{key}')
             except Exception:
                 print("** no instance found **")
                 return 0
-
+            #This is the part that wil try to update it
+            #This eval transforms "string" to string
+            #and also floats to floats, etc.
             try:
                 obj.__dict__[args[2]] = eval(args[3])
             except AttributeError:
@@ -162,6 +180,9 @@ class HBNBCommand(cmd.Cmd):
                 return 0
             except Exception:
                 try:
+                    #if the eval fails we try just setting
+                    #up the value as normal. If this also fails
+                    #Then it wasn't a valid instance to begin with
                     obj.__dict__[args[2]] = args[3]
                 except Exception:
                     print("** no instance found **")
