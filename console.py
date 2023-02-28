@@ -1,15 +1,22 @@
 #!/usr/bin/python3
 """ Defines the console class """
 import cmd
-from models import storage
 from models.base_model import BaseModel
+from models import storage
+from models.user import User
+from models.place import Place
+from models.state import State
+from models.review import Review
+from models.city import City
+from models.amenity import Amenity
+import models
 
 
 class HBNBCommand(cmd.Cmd):
     """ Command shell for hbnb """
 
     prompt = "(hbnb) "
-
+        
     def emptyline(self):
         """Ignores empty prompts"""
         pass
@@ -54,15 +61,18 @@ class HBNBCommand(cmd.Cmd):
                         obj = all_objs[obj_id]
                         if obj.id == args[1]:
                             print(obj)
+                            return 0
                         else:
                             obj = None
                 if obj == None:
                     print("** no instance found **")
+                    return 0
             except IndexError:
                 print("** instance id missing **")
+                return 0
             except NameError:
                 print("** class doesn't exist **")
-
+                return 0
 
     def do_destroy(self, *args):
         """ destroys an instance based on the class name and id"""
@@ -76,19 +86,18 @@ class HBNBCommand(cmd.Cmd):
                 obj_class = eval(f"str({args[0]})")
                 obj_id = args[1]
                 obj = None
-                for obj_class in all_objs.items():
-                    for obj_id in all_objs.keys():
-                        obj = all_objs[obj_id]
-                if obj.id != args[1]:
-                    print("** no instance found **")
-                    return 0
-                else:
-                    all_objs.pop(obj_id)
-                    storage.save()
             except IndexError:
                 print("** instance id missing **")
+                return 0
             except NameError:
                 print("** class doesn't exist **")
+                return 0
+            try:
+                del all_objs[f'{args[0]}.{obj_id}']
+                storage.save()
+            except KeyError:
+                print("** instance not found **")
+                return 0
 
 
     def do_all(self, *args):
@@ -104,14 +113,14 @@ class HBNBCommand(cmd.Cmd):
             args = tuple(map(str, args.split(" ")))
             try:
                 obj_class = eval(f"str({args[0]})")
-                for obj_class in all_objs.items():
-                    for i in all_objs.keys():
-                        print(all_objs[i])
+                for key, value in all_objs.items():
+                    if key.split('.')[0] == args[0]:
+                        print(str(value))
             except NameError:
                 print("** class doesn't exist **")
 
 
-
+    #Fix this to work with user
     def do_update(self, *args):
         """Updates an instance based on the class name and id by adding or
         updating the attribute"""
@@ -128,6 +137,7 @@ class HBNBCommand(cmd.Cmd):
                               "** value missing **"]
                 print(parametro[len(args) - 1])
                 return 0
+
             all_objs = storage.all()
             try:
                 obj_class = eval(f"str({args[0]})")
@@ -138,17 +148,24 @@ class HBNBCommand(cmd.Cmd):
             obj_attrib = args[2]
             new_value = args[3]
             obj = None
-            key = obj_class + "." + obj_id
-            for key in all_objs.keys():
-                obj = all_objs[key]
+            key = args[0] + "." + obj_id
             try:
-                if obj.id  != obj_id:
+                obj = all_objs.get(f'{key}')
+            except Exception:
+                print("** no instance found **")
+                return 0
+
+            try:
+                obj.__dict__[args[2]] = eval(args[3])
+            except AttributeError:
+                print("** no instance found **")
+                return 0
+            except Exception:
+                try:
+                    obj.__dict__[args[2]] = args[3]
+                except Exception:
                     print("** no instance found **")
                     return 0
-                else:
-                    obj.__dict__[args[2]] = eval(args[3])
-            except Exception:
-                obj.__dict__[args[2]] = args[3]
             obj.save()
 
 if __name__ == '__main__':
