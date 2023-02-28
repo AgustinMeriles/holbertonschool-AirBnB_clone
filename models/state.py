@@ -4,4 +4,6 @@ from models.base_model import BaseModel
 
 
 class State(BaseModel):
+    """Initialization of class State"""
+
     name = ""
