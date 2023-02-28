@@ -57,21 +57,22 @@ class HBNBCommand(cmd.Cmd):
                 obj_class = eval(f"str({args[0]})")
                 obj_id = args[1]
                 obj = None
-                #It's a bit ugly but this is the function that searches
+                #this is the function that searches
                 #for our value and prints it if it finds it.
-                for obj_class in all_objs.items():
-                    for obj_id in all_objs.keys():
-                        obj = all_objs[obj_id]
-                        if obj.id == args[1]:
-                            print(obj)
-                            return 0
-                        else:
-                            obj = None
-                            #Everything under this line is just
-                            #error handling
-                if obj == None:
+                key = args[0] + "." + obj_id
+                #This part of the code will attempt to
+                #get our object.
+                try:
+                    obj = all_objs.get(f'{key}')
+                    if obj == None:
+                        print("** no instance found **")
+                        return 0
+                    print(obj)
+                except Exception:
                     print("** no instance found **")
                     return 0
+            #Everything under this line is just
+            #error handling
             except IndexError:
                 print("** instance id missing **")
                 return 0
