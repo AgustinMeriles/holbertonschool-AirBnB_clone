@@ -54,7 +54,6 @@ class HBNBCommand(cmd.Cmd):
                         obj = all_objs[obj_id]
                         if obj.id == args[1]:
                             print(obj)
-                            return 0
                         else:
                             obj = None
                 if obj == None:
@@ -108,9 +107,9 @@ class HBNBCommand(cmd.Cmd):
             args = tuple(map(str, args.split(" ")))
             try:
                 obj_class = eval(f"str({args[0]})")
-                for obj_class in all_objs.items():
-                    for i in all_objs.keys():
-                        print(all_objs[i])
+                for key, value in all_objs.items():
+                    if key.split('.')[0] == args[0]:
+                        print(str(value))
             except NameError:
                 print("** class doesn't exist **")
 
